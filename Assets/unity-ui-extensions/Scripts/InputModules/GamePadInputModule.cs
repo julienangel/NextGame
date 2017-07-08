@@ -187,7 +187,7 @@ namespace UnityEngine.EventSystems
                 return false;
             }
 
-            // If user pressed key again, always allow event
+            // If user objectPressed key again, always allow event
             bool allow = Input.GetButtonDown(m_HorizontalAxis) || Input.GetButtonDown(m_VerticalAxis);
             bool similarDir = (Vector2.Dot(movement, m_LastMoveVector) > 0);
             if (!allow)

@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class UIButtons : MonoBehaviour
 {
-
     private GameManager _gameManager;
     public GameManager GameManager
     {
@@ -63,6 +62,12 @@ public class UIButtons : MonoBehaviour
     public void LevelsHolderGoBack()
     {
         _sceneState.gameState = SceneState.GameState.PackHolder;
+        NavigationBetweenScenes();
+    }
+
+    public void PlayUnlockedLevel()
+    {
+        _sceneState.gameState = SceneState.GameState.InGame;
         NavigationBetweenScenes();
     }
 

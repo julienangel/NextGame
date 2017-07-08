@@ -14,22 +14,30 @@ public class LevelGenerator : MonoBehaviour
     public Vector2 initial, atual;
     public Vector2 cursorPos;
     private bool procurarFim = false;
+    private Level level;
+
+    //save memory
+    Vector2 right = Vector2.right;
+    Vector2 left = Vector2.left;
+    Vector2 up = Vector2.up;
+    Vector2 down = Vector2.down;
 
     public static LevelGenerator Create()
     {
         GameObject gameObject = new GameObject();
         gameObject.name = "GenerateLevels";
         LevelGenerator gerador = gameObject.AddComponent<LevelGenerator>();
+        gerador.level = new Level();
         return gerador;
     }
 
     public void GenerateLevel(int max_pieces, int num_max, int max_sum, int size)
     {
-        levelString = "";
-        solution = "";
         this.max_pieces = max_pieces;
         this.num_max = num_max;
         this.size = size;
+        this.level.piecesInfoList = new List<PiecesInfo>();
+        this.level.solucao = new List<Vector2>();
 
         //generate base
         board = new int[size, size];
@@ -44,21 +52,13 @@ public class LevelGenerator : MonoBehaviour
 
         //Choose initial
         initial = new Vector2(Random.Range(0, size), Random.Range(0, size));
-        IncCoord(initial);
-        atual = initial;
 
         //save cursor initial position
-        cursorPos = new Vector2(atual.x, atual.y);
+        this.level.mousePos = initial;
 
-        //to instantiate the cursor on the right position
-        for (int i = 0; i < size; i++)
-        {
-            if (atual.y == i)
-            {
-                cursorPos = new Vector2(atual.x, size - (i + 1));
-                break;
-            }
-        }
+        IncCoord(initial);
+
+        atual = initial;
 
         for (int k = 0; k < max_sum; k++)
         {
@@ -81,6 +81,7 @@ public class LevelGenerator : MonoBehaviour
         List<int> disp = VerificarDisponiveis();
         int dir = disp[Random.Range(0, disp.Count)];
 
+
         if (disp.Count <= 0)
         {
             CreateLevel(10, 5, 15, 5);
@@ -94,7 +95,7 @@ public class LevelGenerator : MonoBehaviour
                 if (board[(int)(atual.x + 1), (int)atual.y] <= 0)
                 {
                     atual += Vector2.right;
-                    solution += "0";
+                    level.solucao.Add(right);
                     AdicionarFim(atual);
                 }
                 else
@@ -282,19 +283,26 @@ public class LevelGenerator : MonoBehaviour
         {
             for (int j = 0; j < size; j++)
             {
-                if (board[j, i] == -1)
+                //if (board[j, i] == -1)
+                //{
+                //    levelString += ".,";
+                //}
+                //else
+                //{
+                //    levelString += board[j, i].ToString() + ",";
+                //}
+                if(board[i,j] > 0)
                 {
-                    levelString += ".,";
+                    PiecesInfo piece = new PiecesInfo();
+                    piece.number = board[i, j];
+                    piece.position = new Vector2(i, j);
                 }
-                else
-                {
-                    levelString += board[j, i].ToString() + ",";
-                }
+                Debug.Log(board[i, j]);
             }
-            if (i != size - 1)
-                levelString += "\n";
+            //if (i != size - 1)
+            //    levelString += "\n";
         }
-        Debug.Log(levelString);
+        //Debug.Log(levelString);
     }
 
     public void CreateLevel(int max_pieces, int num_max, int max_sum, int size)

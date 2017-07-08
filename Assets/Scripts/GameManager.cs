@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class GameManager : MonoBehaviour {
 
@@ -20,21 +21,24 @@ public class GameManager : MonoBehaviour {
     private LevelSaver _levelSaver;
     private LevelLoader _levelLoader;
     private BackGroundManager _backgroundManager;
+    private CameraCalculation _cameraCalculation;
+
+    //aux's
+
 
     void Awake() {
         _level = new Level();
         _levelSaver = new LevelSaver(this._level);
         _levelLoader = new LevelLoader(this._level);
         _sceneState = new SceneState();
+        _cameraCalculation = new CameraCalculation();
         uiButtons = UIButtons.Create(this);
         _levelGenerator = LevelGenerator.Create();
-        //_backgroundManager = BackGroundManager.Create();
+        _backgroundManager = BackGroundManager.Create();
     }
     
 	void Start () {
-
-        //_levelGenerator.GenerateLevel(5, 3, 10, 5);
-        
+        _levelGenerator.GenerateLevel(5, 5, 10, 5);
     }
 
     #region GetReferences
@@ -67,9 +71,11 @@ public class GameManager : MonoBehaviour {
         uiButtons.SelectPack();
     }
 
-    public void LoadLevel(int levelNumber)
+    public void PlayUnlockedLevel()
     {
-
+        uiButtons.PlayUnlockedLevel();
+        _backgroundManager.DisplayBackground(5);
+        _cameraCalculation.CameraOrtAndPosition(5);
     }
     #endregion
 }

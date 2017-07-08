@@ -59,7 +59,7 @@ namespace UnityEngine.UI.Extensions
 		// A secondary storage of objects that the user can manually set.
 		private MonoBehaviour[] selectableGroup;
 		
-		//Stores the selectable that was touched when the mouse button was pressed down
+		//Stores the selectable that was touched when the mouse button was objectPressed down
 		private IBoxSelectable clickedBeforeDrag;
 		
 		//Stores the selectable that was touched when the mouse button was released
@@ -184,7 +184,7 @@ namespace UnityEngine.UI.Extensions
 				if (selectable != null) {
 					selectableList.Add (selectable); 
 					
-					//We're using left shift to act as the "Add To Selection" command. So if left shift isn't pressed, we want everything to begin deselected
+					//We're using left shift to act as the "Add To Selection" command. So if left shift isn't objectPressed, we want everything to begin deselected
 					if (!Input.GetKey (KeyCode.LeftShift)) {
 						selectable.selected = false;
 					}

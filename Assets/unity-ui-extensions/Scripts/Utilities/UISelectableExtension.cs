@@ -22,7 +22,7 @@ namespace UnityEngine.UI.Extensions
         #endregion
 
         #region Events
-		[Tooltip("Event that fires when a button is initially pressed down")]
+		[Tooltip("Event that fires when a button is initially objectPressed down")]
         public UIButtonEvent OnButtonPress;
 		[Tooltip("Event that fires when a button is released")]
         public UIButtonEvent OnButtonRelease;
@@ -81,7 +81,7 @@ namespace UnityEngine.UI.Extensions
 		}
 		
 		/// <summary>
-		/// Test method to verify a controll is pressed
+		/// Test method to verify a controll is objectPressed
 		/// </summary>
 		public void TestPressed()
 		{
