@@ -7,7 +7,6 @@ using UnityEngine;
 public class Level
 {
     public Vector2 mousePos;
-    public Vector2 mouseEnd;
     public Vector2 size;
     public string levelString;
     public string solucao;
