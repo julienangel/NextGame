@@ -19,4 +19,15 @@ public class Piece : MonoBehaviour {
         sprite = GetComponent<SpriteRenderer>();
         numberText.text = "" + number;
 	}
+
+    public void UpdateValue()
+    {
+        if (number > 0)
+        {
+            number--;
+            numberText.text = "" + number;
+            if (number <= 0)
+                numberText.gameObject.SetActive(false);
+        }
+    }
 }

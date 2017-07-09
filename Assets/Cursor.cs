@@ -12,6 +12,12 @@ public class Cursor : MonoBehaviour
 
     BoardManager board;
 
+    //save memory
+    Vector2 right = Vector2.right;
+    Vector2 left = Vector2.left;
+    Vector2 up = Vector2.up;
+    Vector2 down = Vector2.down;
+
     // Use this for initialization
     void Start()
     {
@@ -21,7 +27,8 @@ public class Cursor : MonoBehaviour
 
     void Update()
     {
-
+        if (Input.GetKeyDown(KeyCode.D))
+            Move(right);
     }
 
     public void InitialStart(Vector2 position)
@@ -35,6 +42,7 @@ public class Cursor : MonoBehaviour
     public void Move(Vector2 dir)
     {
         end = (Vector2)transform.localPosition + dir;
+        StartCoroutine(MoveToEnd());
     }
 
     IEnumerator MoveToEnd()

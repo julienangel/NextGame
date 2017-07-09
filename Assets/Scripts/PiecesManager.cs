@@ -7,6 +7,7 @@ public class PiecesManager : MonoBehaviour
 {
     //
     private List<Piece> _piecesList = new List<Piece>(225);
+    private GameObject finish;
 
     //
     private int _piecesCount = 0;
@@ -32,15 +33,22 @@ public class PiecesManager : MonoBehaviour
         _piecesList[i].number = number;
     }
 
+    public void DisplayFinish(Vector2 pos)
+    {
+        finish.SetActive(true);
+        finish.transform.localPosition = pos;
+    }
+
     public void AddComponents(int size)
     {
         Transform parent = this.transform;
         Piece newGo = null;
+        //Pieces
         for (int i = 0; i < size; i++)
         {
             if (newGo == null)
             {
-                newGo = piecePrefab;
+                newGo = Instantiate(piecePrefab, parent);
             }
             else
             {
@@ -49,6 +57,12 @@ public class PiecesManager : MonoBehaviour
             newGo.name = "Piece";
             _piecesList.Add(newGo);
         }
+        //Finish temporarely
+        finish = new GameObject();
+        finish.AddComponent<SpriteRenderer>();
+        finish.name = "Finish";
+        finish.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/SquareNovo");
+        finish.GetComponent<SpriteRenderer>().color = Color.blue;
         GC.Collect();
         DesativatePieces();
     }
@@ -59,5 +73,6 @@ public class PiecesManager : MonoBehaviour
         {
             _piecesList[i].gameObject.SetActive(false);
         }
+        finish.SetActive(false);
     }
 }

@@ -42,10 +42,11 @@ public class LoadLevelFromJson: MonoBehaviour {
         board.NewBoard(size);
 
         _backgroundManager.DisplayBackground(size);
-
         _cameraCalculation.CameraOrtAndPosition(size);
 
         int piecesCount = _level.piecesInfoList.Count;
+
+        // Display numbers
         for (int i = 0; i < piecesCount; i++)
         {
             Vector2 piecePos = _level.piecesInfoList[i].position;
@@ -55,8 +56,11 @@ public class LoadLevelFromJson: MonoBehaviour {
 
             board.AddOnBoard(number, piecePos);
         }
+        // Display finish
+        _piecesManager.DisplayFinish(_level.finishInfo.pos);
+        // -1 on the board represents the finish
+        board.AddOnBoard(-1, _level.finishInfo.pos);
 
         cursorPrefab.InitialStart(_level.mousePos);
     }
-	
 }
