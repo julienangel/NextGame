@@ -5,11 +5,8 @@ using UnityEngine;
 public class UIButtons : MonoBehaviour
 {
     private GameManager _gameManager;
-    public GameManager GameManager
-    {
-        get { return _gameManager; }
-        set { _gameManager = value; }
-    }
+
+    private LoadLevelFromJson _jsonLoader;
 
     GameObject MenuHolderObjects;
     GameObject LevelPacksHolder;
@@ -20,18 +17,20 @@ public class UIButtons : MonoBehaviour
 
     private SceneState _sceneState;
 
-    public static UIButtons Create(GameManager gameManager)
+    public static UIButtons Create(GameManager gameManager, LoadLevelFromJson jsonLoader)
     {
         GameObject gameObject = new GameObject();
         gameObject.name = "UiButtons";
         UIButtons uiButtons = gameObject.AddComponent<UIButtons>();
+        uiButtons._gameManager = gameManager;
+        uiButtons._jsonLoader = jsonLoader;
         uiButtons.MenuHolderObjects = gameManager.MenuHolderObjects;
         uiButtons.LevelPacksHolder = gameManager.LevelPacksHolder;
         uiButtons.LevelsHolder = gameManager.LevelsHolder;
         uiButtons.InGame = gameManager.InGame;
         uiButtons.StoreHolder = gameManager.StoreHolder;
         uiButtons.OptionsHolder = gameManager.OptionsHolder;
-        uiButtons._sceneState = gameManager.GetSceneState();
+        uiButtons._sceneState = new SceneState();
         return uiButtons;
     }
 
@@ -69,6 +68,7 @@ public class UIButtons : MonoBehaviour
     {
         _sceneState.gameState = SceneState.GameState.InGame;
         NavigationBetweenScenes();
+        _jsonLoader.LoadFromJson("1");
     }
 
     public void NavigationBetweenScenes()

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-public class LevelGenerator : MonoBehaviour
+public class LevelGenerator
 {
-    public string levelString = "";
-    public string solution = "";
     public int max_pieces;
     public int max_sum;
     public int num_max;
@@ -14,7 +12,9 @@ public class LevelGenerator : MonoBehaviour
     public Vector2 initial, atual;
     public Vector2 cursorPos;
     private bool procurarFim = false;
-    private Level level;
+    private Level _level;
+    private LevelSaver _lvlSaver;
+    private int numberName = 0;
 
     //save memory
     Vector2 right = Vector2.right;
@@ -22,22 +22,31 @@ public class LevelGenerator : MonoBehaviour
     Vector2 up = Vector2.up;
     Vector2 down = Vector2.down;
 
-    public static LevelGenerator Create()
+    //public static LevelGenerator Create()
+    //{
+    //    GameObject gameObject = new GameObject();
+    //    gameObject.name = "GenerateLevels";
+    //    LevelGenerator gerador = gameObject.AddComponent<LevelGenerator>();
+    //    gerador.level = new Level();
+    //    return gerador;
+    //}
+
+    public LevelGenerator()
     {
-        GameObject gameObject = new GameObject();
-        gameObject.name = "GenerateLevels";
-        LevelGenerator gerador = gameObject.AddComponent<LevelGenerator>();
-        gerador.level = new Level();
-        return gerador;
+        _level = new Level();
+        _lvlSaver = new LevelSaver();
     }
 
-    public void GenerateLevel(int max_pieces, int num_max, int max_sum, int size)
+    public void GenerateLevel(int max_pieces, int num_max, int max_sum, int size, int numberName)
     {
         this.max_pieces = max_pieces;
         this.num_max = num_max;
         this.size = size;
-        this.level.piecesInfoList = new List<PiecesInfo>();
-        this.level.solucao = new List<Vector2>();
+        this.max_sum = max_sum;
+        this.numberName = numberName;
+        this._level.piecesInfoList = new List<PiecesInfo>();
+        this._level.solucao = new List<Vector2>();
+        this._level.size = new Vector2(size, size);
 
         //generate base
         board = new int[size, size];
@@ -54,7 +63,7 @@ public class LevelGenerator : MonoBehaviour
         initial = new Vector2(Random.Range(0, size), Random.Range(0, size));
 
         //save cursor initial position
-        this.level.mousePos = initial;
+        this._level.mousePos = initial;
 
         IncCoord(initial);
 
@@ -72,7 +81,7 @@ public class LevelGenerator : MonoBehaviour
             GerarDirecao();
         }
 
-        GerarString();
+        SaveLevelInfo();
     }
 
     public void GerarDirecao()
@@ -84,7 +93,7 @@ public class LevelGenerator : MonoBehaviour
 
         if (disp.Count <= 0)
         {
-            CreateLevel(10, 5, 15, 5);
+            GenerateLevel(this.max_pieces, this.num_max, this.max_sum, this.size, this.numberName);
         }
 
         //Testar direita
@@ -94,21 +103,21 @@ public class LevelGenerator : MonoBehaviour
             {
                 if (board[(int)(atual.x + 1), (int)atual.y] <= 0)
                 {
-                    atual += Vector2.right;
-                    level.solucao.Add(right);
+                    atual += right;
+                    _level.solucao.Add(right);
                     AdicionarFim(atual);
                 }
                 else
                 {
-                    atual += Vector2.right;
-                    solution += "0";
+                    atual += right;
+                    _level.solucao.Add(right);
                     IncCoord(atual);
                 }
             }
             else
             {
-                atual += Vector2.right;
-                solution += "0";
+                atual += right;
+                _level.solucao.Add(right);
                 IncCoord(atual);
             }
         }
@@ -119,21 +128,21 @@ public class LevelGenerator : MonoBehaviour
             {
                 if (board[(int)(atual.x - 1), (int)atual.y] <= 0)
                 {
-                    atual += Vector2.left;
-                    solution += "1";
+                    atual += left;
+                    _level.solucao.Add(left);
                     AdicionarFim(atual);
                 }
                 else
                 {
-                    atual += Vector2.left;
-                    solution += "1";
+                    atual += left;
+                    _level.solucao.Add(left);
                     IncCoord(atual);
                 }
             }
             else
             {
-                atual += Vector2.left;
-                solution += "1";
+                atual += left;
+                _level.solucao.Add(left);
                 IncCoord(atual);
             }
         }
@@ -145,21 +154,21 @@ public class LevelGenerator : MonoBehaviour
             {
                 if (board[(int)(atual.x), (int)atual.y - 1] <= 0)
                 {
-                    atual += Vector2.down;
-                    solution += "3";
+                    atual += down;
+                    _level.solucao.Add(down);
                     AdicionarFim(atual);
                 }
                 else
                 {
-                    atual += Vector2.down;
-                    solution += "3";
+                    atual += down;
+                    _level.solucao.Add(down);
                     IncCoord(atual);
                 }
             }
             else
             {
-                atual += Vector2.down;
-                solution += "3";
+                atual += down;
+                _level.solucao.Add(down);
                 IncCoord(atual);
             }
         }
@@ -171,21 +180,21 @@ public class LevelGenerator : MonoBehaviour
             {
                 if (board[(int)(atual.x), (int)atual.y + 1] <= 0)
                 {
-                    atual += Vector2.up;
-                    solution += "2";
+                    atual += up;
+                    _level.solucao.Add(up);
                     AdicionarFim(atual);
                 }
                 else
                 {
-                    atual += Vector2.up;
-                    solution += "2";
+                    atual += up;
+                    _level.solucao.Add(up);
                     IncCoord(atual);
                 }
             }
             else
             {
-                atual += Vector2.up;
-                solution += "2";
+                atual += up;
+                _level.solucao.Add(up);
                 IncCoord(atual);
             }
         }
@@ -277,49 +286,45 @@ public class LevelGenerator : MonoBehaviour
         board[(int)pos.x, (int)pos.y] += 1;
     }
 
-    public void GerarString()
+    public void SaveLevelInfo()
     {
         for (int i = 0; i < size; i++)
         {
             for (int j = 0; j < size; j++)
             {
-                //if (board[j, i] == -1)
-                //{
-                //    levelString += ".,";
-                //}
-                //else
-                //{
-                //    levelString += board[j, i].ToString() + ",";
-                //}
                 if(board[i,j] > 0)
                 {
                     PiecesInfo piece = new PiecesInfo();
                     piece.number = board[i, j];
                     piece.position = new Vector2(i, j);
+                    _level.piecesInfoList.Add(piece);
                 }
-                Debug.Log(board[i, j]);
+                else if(board[i,j] < 0)
+                {
+                    FinishInfo finish = new FinishInfo();
+                    finish.pos = new Vector2(i, j);
+                    _level.finishInfo = finish;
+                }
             }
-            //if (i != size - 1)
-            //    levelString += "\n";
         }
-        //Debug.Log(levelString);
+        _lvlSaver.SaveInText("" + numberName, this._level);
     }
 
-    public void CreateLevel(int max_pieces, int num_max, int max_sum, int size)
-    {
-        this.max_pieces = max_pieces;
-        this.num_max = num_max;
-        this.max_sum = max_sum;
-        this.size = size;
-        GenerateLevel(max_pieces, num_max, max_sum, size);
+//    public void CreateLevel(int max_pieces, int num_max, int max_sum, int size)
+//    {
+//        this.max_pieces = max_pieces;
+//        this.num_max = num_max;
+//        this.max_sum = max_sum;
+//        this.size = size;
+//        GenerateLevel(max_pieces, num_max, max_sum, size);
         
-        //_gameManager.lvlLoader.SaveLevelAndMousePos(cursorPos, new Vector2(max_largura, max_altura), nivel, "level999", solucao);
-        //para atualizar a database
-#if UNITY_EDITOR
-        {
-            UnityEditor.AssetDatabase.Refresh();
-        }
-#endif
-        //_gameManager.LoadLevel(999);
-    }
+//        //_gameManager.lvlLoader.SaveLevelAndMousePos(cursorPos, new Vector2(max_largura, max_altura), nivel, "level999", solucao);
+//        //para atualizar a database
+//#if UNITY_EDITOR
+//        {
+//            UnityEditor.AssetDatabase.Refresh();
+//        }
+//#endif
+//        //_gameManager.LoadLevel(999);
+//    }
 }

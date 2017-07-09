@@ -13,10 +13,7 @@ public class BackGroundManager : MonoBehaviour
 
     void Start()
     {
-        _bgPiecesCount = _backgroundPieces.Capacity;
-        _bgPiece = Resources.Load<Sprite>("Sprites/BackgroundPieceNovo");
-        AddComponentToPieces(_bgPiecesCount);
-        DesativatePieces();
+
     }
 
     public static BackGroundManager Create()
@@ -24,6 +21,10 @@ public class BackGroundManager : MonoBehaviour
         GameObject gameObject = new GameObject();
         gameObject.name = "Background Manager";
         BackGroundManager backgroundManager = gameObject.AddComponent<BackGroundManager>();
+        backgroundManager._bgPiecesCount = backgroundManager._backgroundPieces.Capacity;
+        backgroundManager._bgPiece = Resources.Load<Sprite>("Sprites/BackgroundPieceNovo");
+        backgroundManager.AddComponentToPieces(backgroundManager._bgPiecesCount);
+        backgroundManager.DesativatePieces();
         return backgroundManager;
     }
 

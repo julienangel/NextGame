@@ -13,22 +13,7 @@ public class LevelLoader {
 
     public Level LoadFromJson(string mapName)
     {
-        string levelTemp = Resources.Load<TextAsset>(mapName).ToString();
+        string levelTemp = Resources.Load<TextAsset>("LevelsJson/" + mapName).ToString();
         return _level = JsonUtility.FromJson<Level>(levelTemp);
-    }
-
-    public string DisplayLevel()
-    {
-        return _level.levelString;
-    }
-
-    public Vector2 MousePos()
-    {
-        return _level.mousePos;
-    }
-
-    public string ReturnSolution()
-    {
-        return _level.solucao;
     }
 }
