@@ -26,17 +26,20 @@ public class PiecesManager : MonoBehaviour
         return piecesManager;
     }
 
-    public void DisplayPiece(int i, Vector2 pos, int number)
+    public GameObject DisplayPiece(int i, Vector2 pos, int number)
     {
         _piecesList[i].gameObject.SetActive(true);
         _piecesList[i].transform.localPosition = pos;
         _piecesList[i].number = number;
+        _piecesList[i].Initialize();
+        return _piecesList[i].gameObject;
     }
 
-    public void DisplayFinish(Vector2 pos)
+    public GameObject DisplayFinish(Vector2 pos)
     {
         finish.SetActive(true);
         finish.transform.localPosition = pos;
+        return finish;
     }
 
     public void AddComponents(int size)
@@ -72,6 +75,7 @@ public class PiecesManager : MonoBehaviour
         for (int i = 0; i < _piecesCount; i++)
         {
             _piecesList[i].gameObject.SetActive(false);
+            _piecesList[i].gameObject.tag = "Untagged";
         }
         finish.SetActive(false);
     }

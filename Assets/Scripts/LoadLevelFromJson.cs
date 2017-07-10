@@ -18,8 +18,8 @@ public class LoadLevelFromJson: MonoBehaviour {
         gameObject.name = "JsonLoader";
         LoadLevelFromJson jsonLoader = gameObject.AddComponent<LoadLevelFromJson>();
         jsonLoader._levelLoader = new LevelLoader(jsonLoader._level);
-        jsonLoader._backgroundManager = BackGroundManager.Create();
-        jsonLoader._piecesManager = PiecesManager.Create();
+        GameManager.GetInstance().backgroundManager = jsonLoader._backgroundManager = BackGroundManager.Create();
+        GameManager.GetInstance().piecesManager = jsonLoader._piecesManager = PiecesManager.Create();
         jsonLoader._levelLoader = new LevelLoader(jsonLoader._level);
         jsonLoader.cursorPrefab = Resources.Load<Cursor>("Prefabs/Cursor");
         jsonLoader._cameraCalculation = new CameraCalculation();
@@ -38,6 +38,9 @@ public class LoadLevelFromJson: MonoBehaviour {
         _level = new Level();
         _level = _levelLoader.LoadFromJson(levelName);
         int size = (int)_level.size.x;
+        _piecesManager.DesativatePieces();
+
+        board.ResetNumberCount();
 
         board.NewBoard(size);
 
@@ -52,14 +55,16 @@ public class LoadLevelFromJson: MonoBehaviour {
             Vector2 piecePos = _level.piecesInfoList[i].position;
             int number = _level.piecesInfoList[i].number;
 
-            _piecesManager.DisplayPiece(i, piecePos, number);
+            GameObject piece = _piecesManager.DisplayPiece(i, piecePos, number);
+            piece.tag = "Number";
 
-            board.AddOnBoard(number, piecePos);
+            board.AddOnBoard(piece, piecePos);
         }
         // Display finish
-        _piecesManager.DisplayFinish(_level.finishInfo.pos);
-        // -1 on the board represents the finish
-        board.AddOnBoard(-1, _level.finishInfo.pos);
+        GameObject finish = _piecesManager.DisplayFinish(_level.finishInfo.pos);
+        finish.tag = "Finish";
+        //the finish
+        board.AddOnBoard(finish, _level.finishInfo.pos);
 
         cursorPrefab.InitialStart(_level.mousePos);
     }

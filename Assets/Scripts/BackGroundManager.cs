@@ -11,11 +11,6 @@ public class BackGroundManager : MonoBehaviour
     //
     private int _bgPiecesCount;
 
-    void Start()
-    {
-
-    }
-
     public static BackGroundManager Create()
     {
         GameObject gameObject = new GameObject();
@@ -70,7 +65,6 @@ public class BackGroundManager : MonoBehaviour
     {
         for (int i = 0; i < _bgPiecesCount; i++)
         {
-            _backgroundPieces[i].GetComponent<SpriteRenderer>().sprite = null;
             _backgroundPieces[i].SetActive(false);
         }
     }

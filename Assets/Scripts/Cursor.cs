@@ -8,9 +8,10 @@ public class Cursor : MonoBehaviour
     public Vector2 pos, end;
 
     [HideInInspector]
-    public bool canMove = false;
+    public bool canMove = true;
 
     BoardManager board;
+    GameManager gameManager;
 
     //save memory
     Vector2 right = Vector2.right;
@@ -21,14 +22,25 @@ public class Cursor : MonoBehaviour
     // Use this for initialization
     void Start()
     {
+        canMove = true;
+        gameManager = GameManager.GetInstance();
         board = GameManager.GetInstance().board;
         end = pos;
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.D))
-            Move(right);
+        if(canMove)
+        {
+            if (Input.GetKeyDown(KeyCode.D))
+                Move(right);
+            else if (Input.GetKeyDown(KeyCode.A))
+                Move(left);
+            else if (Input.GetKeyDown(KeyCode.W))
+                Move(up);
+            else if (Input.GetKeyDown(KeyCode.S))
+                Move(down);
+        }
     }
 
     public void InitialStart(Vector2 position)
@@ -41,8 +53,11 @@ public class Cursor : MonoBehaviour
 
     public void Move(Vector2 dir)
     {
-        end = (Vector2)transform.localPosition + dir;
-        StartCoroutine(MoveToEnd());
+        if(board.AvailableToMove(pos, dir))
+        {
+            end = (Vector2)transform.localPosition + dir;
+            StartCoroutine(MoveToEnd());
+        }
     }
 
     IEnumerator MoveToEnd()
@@ -56,5 +71,10 @@ public class Cursor : MonoBehaviour
             yield return new WaitForEndOfFrame();
         }
         canMove = true;
+        if(board.FinishedLevel())
+        {
+            GameManager.GetInstance().levelNumber++;
+            GameManager.GetInstance().PlayUnlockedLevel();
+        }
     }
 }

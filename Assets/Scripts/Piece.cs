@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class Piece : MonoBehaviour {
-
-    [HideInInspector]
+    
     public TextMesh numberText;
 
     [HideInInspector]
     public SpriteRenderer sprite;
-
-    [HideInInspector]
+    
     public int number;
+
+    private BoardManager board;
 
 	// Use this for initialization
 	void Start () {
         numberText = GetComponentInChildren<TextMesh>();
         sprite = GetComponent<SpriteRenderer>();
-        numberText.text = "" + number;
-	}
+        board = GameManager.GetInstance().board;
+    }
 
     public void UpdateValue()
     {
@@ -27,7 +27,16 @@ public class Piece : MonoBehaviour {
             number--;
             numberText.text = "" + number;
             if (number <= 0)
-                numberText.gameObject.SetActive(false);
+            {
+                this.gameObject.tag = "Untagged";
+                numberText.text = "";
+                board.DecrementNumberCount();
+            }
         }
+    }
+
+    public void Initialize()
+    {
+        numberText.text = "" + number;
     }
 }

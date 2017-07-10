@@ -19,8 +19,14 @@ public class GameManager : MonoBehaviour
     private LoadLevelFromJson jsonLoader;
     [HideInInspector]
     public BoardManager board;
+    [HideInInspector]
+    public BackGroundManager backgroundManager;
+    [HideInInspector]
+    public PiecesManager piecesManager;
 
     //aux's
+    [HideInInspector]
+    public int levelNumber = 1;
 
     public static GameManager GetInstance()
     {
@@ -64,7 +70,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayUnlockedLevel()
     {
-        uiButtons.PlayUnlockedLevel();
+        uiButtons.PlayUnlockedLevel(levelNumber);
     }
     #endregion
 }
