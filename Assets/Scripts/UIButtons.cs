@@ -64,9 +64,11 @@ public class UIButtons : MonoBehaviour
         NavigationBetweenScenes();
     }
 
-    public void PlayUnlockedLevel(int numberLevel)
+    public IEnumerator PlayUnlockedLevel(int numberLevel)
     {
         _sceneState.gameState = SceneState.GameState.InGame;
+        StartCoroutine(_gameManager.fadeScenes.PlayFade());
+        yield return new WaitForSeconds(1f);
         NavigationBetweenScenes();
         _jsonLoader.LoadFromJson("" + numberLevel);
     }

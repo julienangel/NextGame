@@ -38,6 +38,7 @@ public class PiecesManager : MonoBehaviour
     public GameObject DisplayFinish(Vector2 pos)
     {
         finish.SetActive(true);
+        finish.GetComponent<SpriteRenderer>().sortingOrder = -1;
         finish.transform.localPosition = pos;
         return finish;
     }

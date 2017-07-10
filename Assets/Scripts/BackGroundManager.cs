@@ -49,7 +49,7 @@ public class BackGroundManager : MonoBehaviour
             {
                 newGo = new GameObject();
                 newGo.transform.parent = parent;
-                newGo.AddComponent<SpriteRenderer>();
+                newGo.AddComponent<SpriteRenderer>().sortingOrder = -1;
             }
             else
             {

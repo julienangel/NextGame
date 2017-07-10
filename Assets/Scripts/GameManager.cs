@@ -25,6 +25,7 @@ public class GameManager : MonoBehaviour
     public BackGroundManager backgroundManager;
     [HideInInspector]
     public PiecesManager piecesManager;
+    public FadeScenes fadeScenes;
 
     //aux's
     [HideInInspector]
@@ -72,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayUnlockedLevel()
     {
-        uiButtons.PlayUnlockedLevel(levelNumber);
+        StartCoroutine(uiButtons.PlayUnlockedLevel(levelNumber));
     }
     #endregion
 }
