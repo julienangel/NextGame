@@ -12,6 +12,8 @@ public class GameManager : MonoBehaviour
     public GameObject InGame;
     public GameObject StoreHolder;
     public GameObject OptionsHolder;
+    [HideInInspector]
+    public GameObject cursorObject;
 
     //Controllers
     private UIButtons uiButtons;

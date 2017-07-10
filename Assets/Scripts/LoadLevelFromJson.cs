@@ -24,6 +24,7 @@ public class LoadLevelFromJson: MonoBehaviour {
         jsonLoader.cursorPrefab = Resources.Load<Cursor>("Prefabs/Cursor");
         jsonLoader._cameraCalculation = new CameraCalculation();
         jsonLoader.cursorPrefab = Instantiate(jsonLoader.cursorPrefab, Vector2.zero, Quaternion.identity);
+        GameManager.GetInstance().cursorObject = jsonLoader.cursorPrefab.gameObject;
         jsonLoader.cursorPrefab.gameObject.SetActive(false);
         return jsonLoader;
     }
@@ -65,7 +66,7 @@ public class LoadLevelFromJson: MonoBehaviour {
         finish.tag = "Finish";
         //the finish
         board.AddOnBoard(finish, _level.finishInfo.pos);
-
+        // Cursor
         cursorPrefab.InitialStart(_level.mousePos);
     }
 }

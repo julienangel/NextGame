@@ -86,6 +86,7 @@ public class UIButtons : MonoBehaviour
                     //Desativar peças
                     _gameManager.backgroundManager.DesativatePieces();
                     _gameManager.piecesManager.DesativatePieces();
+                    _gameManager.cursorObject.SetActive(false);
                     break;
                 }
             case SceneState.GameState.PackHolder:
