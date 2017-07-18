@@ -64,11 +64,10 @@ public class UIButtons : MonoBehaviour
         NavigationBetweenScenes();
     }
 
-    public IEnumerator PlayUnlockedLevel(int numberLevel)
+    public void PlayUnlockedLevel(int numberLevel)
     {
         _sceneState.gameState = SceneState.GameState.InGame;
-        StartCoroutine(_gameManager.fadeScenes.PlayFade());
-        yield return new WaitForSeconds(1f);
+        //_gameManager.fadeScenes.PlayFade();
         NavigationBetweenScenes();
         _jsonLoader.LoadFromJson("" + numberLevel);
     }
@@ -86,7 +85,7 @@ public class UIButtons : MonoBehaviour
                     StoreHolder.SetActive(false);
                     OptionsHolder.SetActive(false);
                     //Desativar peças
-                    _gameManager.backgroundManager.DesativatePieces();
+                    //_gameManager.backgroundManager.DesativatePieces();
                     _gameManager.piecesManager.DesativatePieces();
                     _gameManager.cursorObject.SetActive(false);
                     break;

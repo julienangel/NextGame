@@ -38,7 +38,7 @@ public class PiecesManager : MonoBehaviour
     public GameObject DisplayFinish(Vector2 pos)
     {
         finish.SetActive(true);
-        finish.GetComponent<SpriteRenderer>().sortingOrder = -1;
+        finish.GetComponent<SpriteRenderer>().sortingOrder = 1;
         finish.transform.localPosition = pos;
         return finish;
     }
@@ -65,7 +65,7 @@ public class PiecesManager : MonoBehaviour
         finish = new GameObject();
         finish.AddComponent<SpriteRenderer>();
         finish.name = "Finish";
-        finish.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/SquareNovo");
+        finish.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/squareWhite");
         finish.GetComponent<SpriteRenderer>().color = Color.blue;
         GC.Collect();
         DesativatePieces();

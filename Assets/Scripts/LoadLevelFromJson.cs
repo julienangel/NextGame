@@ -18,7 +18,7 @@ public class LoadLevelFromJson: MonoBehaviour {
         gameObject.name = "JsonLoader";
         LoadLevelFromJson jsonLoader = gameObject.AddComponent<LoadLevelFromJson>();
         jsonLoader._levelLoader = new LevelLoader(jsonLoader._level);
-        GameManager.GetInstance().backgroundManager = jsonLoader._backgroundManager = BackGroundManager.Create();
+        //GameManager.GetInstance().backgroundManager = jsonLoader._backgroundManager = BackGroundManager.Create();
         GameManager.GetInstance().piecesManager = jsonLoader._piecesManager = PiecesManager.Create();
         jsonLoader._levelLoader = new LevelLoader(jsonLoader._level);
         jsonLoader.cursorPrefab = Resources.Load<Cursor>("Prefabs/Cursor");
@@ -45,7 +45,7 @@ public class LoadLevelFromJson: MonoBehaviour {
 
         board.NewBoard(size);
 
-        _backgroundManager.DisplayBackground(size);
+        //_backgroundManager.DisplayBackground(size);
         _cameraCalculation.CameraOrtAndPosition(size);
 
         int piecesCount = _level.piecesInfoList.Count;

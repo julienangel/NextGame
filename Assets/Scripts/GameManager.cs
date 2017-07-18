@@ -73,7 +73,7 @@ public class GameManager : MonoBehaviour
 
     public void PlayUnlockedLevel()
     {
-        StartCoroutine(uiButtons.PlayUnlockedLevel(levelNumber));
+        uiButtons.PlayUnlockedLevel(levelNumber);
     }
     #endregion
 }
