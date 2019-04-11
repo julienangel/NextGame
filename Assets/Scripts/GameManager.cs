@@ -38,6 +38,7 @@ public class GameManager : MonoBehaviour
 
     void Awake()
     {
+        Screen.SetResolution(720, 1280, false);
         jsonLoader = LoadLevelFromJson.Create();
         uiButtons = UIButtons.Create(this, jsonLoader);
         _levelGenerator = new LevelGenerator();
