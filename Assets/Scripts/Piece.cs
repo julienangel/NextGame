@@ -1,42 +1,23 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
+﻿using UnityEngine;
 
-public class Piece : MonoBehaviour {
+public class Piece : MonoBehaviour
+{
+    [Header("Properties")] 
+    [SerializeField] private TextMesh numberText;
     
-    public TextMesh numberText;
+    public int NumberValue { get; private set; }
 
-    [HideInInspector]
-    public SpriteRenderer sprite;
-    
-    public int number;
-
-    private BoardManager board;
-
-	// Use this for initialization
-	void Start () {
-        numberText = GetComponentInChildren<TextMesh>();
-        sprite = GetComponent<SpriteRenderer>();
-        board = GameManager.GetInstance().board;
+    private void OnEnable()
+    {
+        numberText.text = NumberValue <= 0 ? string.Empty : NumberValue.ToString();
     }
 
-    public void UpdateValue()
+    public void OnMove()
     {
-        if (number > 0)
+        if (NumberValue > 0)
         {
-            number--;
-            numberText.text = "" + number;
-            if (number <= 0)
-            {
-                this.gameObject.tag = "Untagged";
-                numberText.text = "";
-                board.DecrementNumberCount();
-            }
+            NumberValue--;
+            numberText.text = NumberValue <= 0 ? string.Empty : NumberValue.ToString();
         }
-    }
-
-    public void Initialize()
-    {
-        numberText.text = "" + number;
     }
 }

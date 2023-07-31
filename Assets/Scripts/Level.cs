@@ -7,8 +7,6 @@ using UnityEngine;
 public class Level
 {
     public Vector2 mousePos;
-    public Vector2 size;
-    public List<PiecesInfo> piecesInfoList;
-    public FinishInfo finishInfo;
-    public List<Vector2> solucao;
+    public int size;
+    public List<PiecesInfo> piecesInfoList = new List<PiecesInfo>();
 }
