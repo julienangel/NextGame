@@ -11,8 +11,8 @@ namespace Installers
         
         public override void InstallBindings()
         {
-            Container.Bind<BoardManager>().AsSingle().NonLazy();
             Container.Bind<ObjectPooler>().FromInstance(objectPooler);
+            Container.Bind<BoardManager>().AsSingle().NonLazy();
         }
     }
 }

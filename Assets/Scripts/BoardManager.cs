@@ -3,7 +3,7 @@ using UnityEngine;
 using Utils;
 using Zenject;
 
-public class BoardManager
+public class BoardManager : IInitializable
 {
     [Inject] [ReadOnly] private ObjectPooler _objectPooler;
     
@@ -51,5 +51,11 @@ public class BoardManager
             default:
                 return false;
         }
+    }
+
+    [Inject]
+    public void Initialize()
+    {
+        
     }
 }

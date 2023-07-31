@@ -1,4 +1,8 @@
-﻿using UnityEngine;
+﻿using System;
+using Unity.Collections;
+using UnityEngine;
+using Utils;
+using Zenject;
 
 public class GameManager : MonoBehaviour
 {
@@ -6,8 +10,15 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject menuWindow;
     [SerializeField] private GameObject inGameWindow;
 
-    void Awake()
+    [Inject] [ReadOnly] private ObjectPooler _objectPooler;
+
+    private void Awake()
     {
         Screen.SetResolution(720, 1280, false);
+    }
+
+    private void OnEnable()
+    {
+        _objectPooler.CreatePool();
     }
 }

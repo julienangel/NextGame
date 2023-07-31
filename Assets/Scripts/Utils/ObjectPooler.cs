@@ -9,7 +9,7 @@ namespace Utils
         [SerializeField] private Dictionary<string, Queue<GameObject>> _poolDictionary;
         [SerializeField] private List<Pool> pools;
 
-        private void CreatePool()
+        public void CreatePool()
         {
             _poolDictionary = new Dictionary<string, Queue<GameObject>>();
 
