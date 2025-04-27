@@ -1,80 +1,38 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
+using Gameplay;
 using UnityEngine;
 using UnityEngine.EventSystems;
+using Utils;
+using Cursor = Gameplay.Cursor;
 
-public class GameManager : MonoBehaviour
+public class GameManager : Singleton<GameManager>
 {
-    //Objects on scene
+    public BoardManager BoardManager { get; private set; }
+    
     public GameObject MenuHolderObjects;
-    public GameObject LevelPacksHolder;
-    public GameObject LevelsHolder;
     public GameObject InGame;
-    public GameObject StoreHolder;
     public GameObject OptionsHolder;
-    [HideInInspector]
-    public GameObject cursorObject;
 
-    //Controllers
-    private UIButtons uiButtons;
-    private LevelGenerator _levelGenerator;
-    private LoadLevelFromJson jsonLoader;
     [HideInInspector]
-    public BoardManager board;
-    [HideInInspector]
-    public BackGroundManager backgroundManager;
-    [HideInInspector]
-    public PiecesManager piecesManager;
     public FadeScenes fadeScenes;
 
-    //aux's
     [HideInInspector]
     public int levelNumber = 1;
+    
+    [SerializeField] private Piece _piecePrefab;
+    [SerializeField] private Cursor _cursorPrefab;
+    
+    
 
-    public static GameManager GetInstance()
+    private void Awake()
     {
-        return FindObjectOfType<GameManager>();
-    }
-
-    void Awake()
-    {
-        Screen.SetResolution(720, 1280, false);
-        jsonLoader = LoadLevelFromJson.Create();
-        uiButtons = UIButtons.Create(this, jsonLoader);
-        _levelGenerator = new LevelGenerator();
-        board = new BoardManager();
-    }
-
-    void Start()
-    {
-        //jsonLoader.LoadFromJson("1");
+        Application.targetFrameRate = 60;
+        BoardManager = new BoardManager(_piecePrefab, _cursorPrefab);
     }
 
     #region Buttons
     //Buttons functions
-    public void GoToPackHolder()
-    {
-        uiButtons.GoToPackHolder();
-    }
-
-    public void PackHolderGoBack()
-    {
-        uiButtons.PackHolderGoBack();
-    }
-
-    public void LevelsHolderGoBack()
-    {
-        uiButtons.LevelsHolderGoBack();
-    }
-
-    public void SelectPack()
-    {
-        uiButtons.SelectPack();
-    }
-
-    public void PlayUnlockedLevel()
-    {
-        uiButtons.PlayUnlockedLevel(levelNumber);
-    }
     #endregion
 }

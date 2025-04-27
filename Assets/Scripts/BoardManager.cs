@@ -1,96 +1,88 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿using Gameplay;
 using UnityEngine;
+using Cursor = Gameplay.Cursor;
 
-public class BoardManager : MonoBehaviour
+public class BoardManager
 {
-    [HideInInspector]
-    public GameObject[,] board;
-    
-    private int numberOfPieces = -1;
+    public Level Level { get; private set; }
 
-    private Cursor cursor;
+    private Piece[,] _pieceBoard;
+    private Piece _finishPiece;
+    private Cursor _cursor;
+    private bool _finishedLevel = false;
 
-    private bool finishedLevel = false;
+    private readonly LevelGenerator _levelGenerator;
 
-    public static BoardManager Create()
+    private readonly Piece _piecePrefab;
+    private readonly Cursor _cursorPrefab;
+
+    public BoardManager(Piece piecePrefab, Cursor cursorPrefab)
     {
-        GameObject gameObject = new GameObject();
-        gameObject.name = "BoardManager";
-        BoardManager board = gameObject.AddComponent<BoardManager>();
-        return board;
+        _levelGenerator = new LevelGenerator();
+        _piecePrefab = piecePrefab;
+        _cursorPrefab = cursorPrefab;
     }
 
-    public void NewBoard(int size)
+    public void GenerateLevel(int size)
     {
-        board = new GameObject[size, size];
-        for (int i = 0; i < size; i++)
+        Level = _levelGenerator.GenerateLevel(7, 3, 10, 5);
+        _pieceBoard = new Piece[size, size];
+        foreach (var piece in Level.piecesInfo)
         {
-            for (int j = 0; j < size; j++)
-            {
-                board[i, j] = null;
-            }
+            var x = piece.Item2.x;
+            var y = piece.Item2.y;
+            var pieceGo = Object.Instantiate(_piecePrefab, new Vector3(x, y, 0),
+                Quaternion.identity);
+            pieceGo.Type = (PieceType)piece.Item1;
+            pieceGo.CurrentNumber = piece.Item1;
+            _pieceBoard[x, y] = pieceGo;
         }
+
+        _finishPiece = Object.Instantiate(_piecePrefab, new Vector3(Level.FinishPos.x, Level.FinishPos.y, 0),
+            Quaternion.identity);
+        _cursor = Object.Instantiate(_cursorPrefab, new Vector3(Level.mousePos.x, Level.mousePos.y, 0),
+            Quaternion.identity);
     }
 
-    public void AddOnBoard(GameObject number, Vector2 pos)
+    public bool AvailableToMove(Vector2 actualPosition, Vector2 dir)
     {
-        board[(int)pos.x, (int)pos.y] = number;
-        numberOfPieces++;
-    }
+        var x = (int)actualPosition.x;
+        var y = (int)actualPosition.y;
 
-    public bool AvailableToMove(Vector2 atualPosition, Vector2 dir)
-    {
-        int x = (int)atualPosition.x;
-        int y = (int)atualPosition.y;
+        var xDir = (int)(dir.x + x);
+        var yDir = (int)(dir.y + y);
 
-        int xDir = (int)(dir.x + x);
-        int yDir = (int)(dir.y + y);
-
-        if (xDir >= board.GetLength(0) || xDir < 0 || yDir >= board.GetLength(1) || yDir < 0 || board[xDir, yDir] == null)
+        if (xDir >= _pieceBoard.GetLength(0) || xDir < 0 || yDir >= _pieceBoard.GetLength(1) || yDir < 0 ||
+            _pieceBoard[xDir, yDir] == null)
             return false;
 
-        string tagAtual = board[x, y].tag;
-        string tagDir = board[xDir, yDir].tag;
+        var actualPiece = _pieceBoard[x, y];
+        var actualType = actualPiece.Type;
+        var dirType = _pieceBoard[xDir, yDir].Type;
 
-        Piece atualPiece = board[x, y].GetComponent<Piece>();
-
-        if (tagAtual == "Number" && tagDir == "Number")
+        switch (actualType)
         {
-            atualPiece.UpdateValue();
-            finishedLevel = false;
-            return true;
+            case PieceType.Movable when dirType == PieceType.Movable:
+                actualPiece.UpdateValue();
+                _finishedLevel = false;
+                return true;
+            case PieceType.Movable when dirType == PieceType.Goal && CanFinish():
+                actualPiece.UpdateValue();
+                _finishedLevel = true;
+                return true;
+            default:
+                return false;
         }
-
-        else if (tagAtual == "Number" && tagDir == "Finish" && CanFinish())
-        {
-            atualPiece.UpdateValue();
-            finishedLevel = true;
-            return true;
-        }
-            
-        return false;
     }
 
-    public bool CanFinish()
+    private bool CanFinish()
     {
-        if (numberOfPieces > 1)
-            return false;
+        // TODO: implement here
         return true;
     }
 
     public bool FinishedLevel()
     {
-        return finishedLevel;
-    }
-
-    public void ResetNumberCount()
-    {
-        numberOfPieces = -1;
-    }
-
-    public void DecrementNumberCount()
-    {
-        numberOfPieces--;
+        return _finishedLevel;
     }
 }

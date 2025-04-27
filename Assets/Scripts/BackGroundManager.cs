@@ -7,14 +7,16 @@ public class BackGroundManager : MonoBehaviour
 {
     //
     private Sprite _bgPiece;
-    private List<GameObject> _backgroundPieces = new List<GameObject>(225);
+    private readonly List<GameObject> _backgroundPieces = new(225);
     //
     private int _bgPiecesCount;
 
     public static BackGroundManager Create()
     {
-        GameObject gameObject = new GameObject();
-        gameObject.name = "Background Manager";
+        GameObject gameObject = new GameObject
+        {
+            name = "Background Manager"
+        };
         BackGroundManager backgroundManager = gameObject.AddComponent<BackGroundManager>();
         backgroundManager._bgPiecesCount = backgroundManager._backgroundPieces.Capacity;
         backgroundManager._bgPiece = Resources.Load<Sprite>("Sprites/BackgroundPieceNovo");
@@ -47,8 +49,13 @@ public class BackGroundManager : MonoBehaviour
         {
             if (newGo == null)
             {
-                newGo = new GameObject();
-                newGo.transform.parent = parent;
+                newGo = new GameObject
+                {
+                    transform =
+                    {
+                        parent = parent
+                    }
+                };
                 newGo.AddComponent<SpriteRenderer>().sortingOrder = 1;
             }
             else

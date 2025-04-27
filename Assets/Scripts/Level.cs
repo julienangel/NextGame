@@ -3,12 +3,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[Serializable]
 public class Level
 {
-    public Vector2 mousePos;
-    public Vector2 size;
-    public List<PiecesInfo> piecesInfoList;
-    public FinishInfo finishInfo;
-    public List<Vector2> solucao;
+    public Vector2Int mousePos;
+    public Vector2Int size;
+    public List<(byte, Vector2Int)> piecesInfo;
+    public Vector2Int FinishPos;
+    public List<Vector2Int> solucao;
 }
