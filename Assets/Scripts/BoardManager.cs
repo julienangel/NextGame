@@ -19,7 +19,7 @@ public class BoardManager
         _piecePrefab = piecePrefab;
         _cursorPrefab = cursorPrefab;
 
-        using var level = LevelGenerator.GenerateLevelWithBenchmark(
+        using var level = LevelGenerator.GenerateLevel(
             minPieces: 0, // Ignorado
             maxPieces: 0, // Ignorado
             numMax: 5,
@@ -27,7 +27,6 @@ public class BoardManager
             size: 8,
             mode: GenerationMode.Nightmare
         );
-        LevelPrinter.PrintLevelWithSolution(level);
 
         // using var level = LevelGenerator.GenerateLevel(
         //     minPieces: 10,
