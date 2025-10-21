@@ -39,7 +39,7 @@ public class BoardManager
         //     true,
         //     true
         // );
-        // LevelPrinter.PrintLevelWithSolution(level);
+        LevelPrinter.PrintLevel(level);
     }
 
     public void GenerateLevel(int size)
