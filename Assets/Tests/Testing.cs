@@ -219,7 +219,7 @@ namespace Tests
             var level = LevelGenerator.GenerateLevel(5, 10, 3, 30, 6, Difficulty.Medium, GenerationMode.FastSafe);
             Assert.IsTrue(level.PiecesInfo.IsCreated);
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             Assert.AreEqual(level.MousePos, game.CurrentPosition, "Posição inicial deve ser MousePos");
@@ -243,7 +243,7 @@ namespace Tests
             };
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(1, 1), Value = 2 });
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             // Tentar mover para célula vazia (cima = 1,2)
@@ -269,7 +269,7 @@ namespace Tests
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(1, 1), Value = 3 });
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(2, 1), Value = 1 });
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             Assert.AreEqual(3, game.GetCell(new int2(1, 1)).Value, "Célula inicial deve ter valor 3");
@@ -296,7 +296,7 @@ namespace Tests
             };
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(0, 0), Value = 2 });
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             // Tentar mover para fora (esquerda e baixo)
@@ -325,7 +325,7 @@ namespace Tests
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(1, 0), Value = 2 });
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(2, 0), Value = 1 });
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             // Tentar entrar no finisher cedo (ainda há 2 células com valores >0)
@@ -350,7 +350,7 @@ namespace Tests
             };
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(1, 0), Value = 1 });
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             // Única célula com valor 1, adjacente ao finisher
@@ -376,7 +376,7 @@ namespace Tests
             };
             level.PiecesInfo.Add(new PieceInfo { Position = new int2(1, 0), Value = 1 });
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             game.TryMove(MoveDirection.Up); // Termina o jogo
@@ -403,7 +403,7 @@ namespace Tests
             var solution = LevelSolver.SolveComplete(level, level.MousePos, 15, 300000, 4096);
             Assert.IsTrue(solution.IsCreated);
 
-            var game = new MousePuzzleGame();
+            var game = new MouzePuzzleGame();
             game.Initialize(level);
 
             // Executar todos os movimentos da solução

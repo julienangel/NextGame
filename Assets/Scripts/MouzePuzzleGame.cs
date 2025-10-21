@@ -4,7 +4,7 @@ using System; // Necessário para EventArgs e Action
 using System.Collections.Generic; // Necessário para Stack
 using UnityEngine; // Necessário para Debug.Log
 
-public class MousePuzzleGame : IDisposable
+public class MouzePuzzleGame : IDisposable
 {
     // --- Campos de Estado ---
     private NativeArray<BurstSolver.BoardCell> board;
