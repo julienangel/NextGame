@@ -39,6 +39,17 @@ public class BoardManager : MonoBehaviour
         numberOfPieces++;
     }
 
+    public bool HasPieceAt(Vector2 pos)
+    {
+        int x = (int)pos.x;
+        int y = (int)pos.y;
+
+        if (x < 0 || x >= board.GetLength(0) || y < 0 || y >= board.GetLength(1))
+            return false;
+
+        return board[x, y] != null;
+    }
+
     public bool AvailableToMove(Vector2 atualPosition, Vector2 dir)
     {
         int x = (int)atualPosition.x;

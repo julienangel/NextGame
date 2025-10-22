@@ -62,11 +62,8 @@ public class PiecesManager : MonoBehaviour
             _piecesList.Add(newGo);
         }
         //Finish temporarely
-        finish = new GameObject();
-        finish.AddComponent<SpriteRenderer>();
+        finish = Instantiate(Resources.Load<GameObject>("Prefabs/Finish"), transform);
         finish.name = "Finish";
-        finish.GetComponent<SpriteRenderer>().sprite = Resources.Load<Sprite>("Sprites/squareWhite");
-        finish.GetComponent<SpriteRenderer>().color = Color.blue;
         GC.Collect();
         DesativatePieces();
     }
@@ -78,6 +75,9 @@ public class PiecesManager : MonoBehaviour
             _piecesList[i].gameObject.SetActive(false);
             _piecesList[i].gameObject.tag = "Untagged";
         }
+        
+        var finishComponent = finish.GetComponent<FinishPiece>();
+        finishComponent.SetAsClosed();
         finish.SetActive(false);
     }
 }

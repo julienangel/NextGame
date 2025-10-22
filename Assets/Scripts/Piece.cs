@@ -1,12 +1,13 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using UnityEngine;
 
 public class Piece : MonoBehaviour {
     
-    public TextMesh numberText;
-
-    [HideInInspector]
+    public TextMeshProUGUI numberText;
+    [SerializeField] private SpriteRenderer _scribbleOverlay;
+    
     public SpriteRenderer sprite;
     
     public int number;
@@ -15,8 +16,8 @@ public class Piece : MonoBehaviour {
 
 	// Use this for initialization
 	void Start () {
-        numberText = GetComponentInChildren<TextMesh>();
-        sprite = GetComponent<SpriteRenderer>();
+        numberText = GetComponentInChildren<TextMeshProUGUI>();
+        //sprite = GetComponent<SpriteRenderer>();
         board = GameManager.GetInstance().board;
     }
 
@@ -30,6 +31,8 @@ public class Piece : MonoBehaviour {
             {
                 this.gameObject.tag = "Untagged";
                 numberText.text = "";
+                //_scribbleOverlay.enabled = true;
+                sprite.enabled = false;
                 board.DecrementNumberCount();
             }
         }
@@ -38,5 +41,7 @@ public class Piece : MonoBehaviour {
     public void Initialize()
     {
         numberText.text = "" + number;
+        sprite.enabled = true;
+        //_scribbleOverlay.enabled = false;
     }
 }

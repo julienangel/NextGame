@@ -51,6 +51,7 @@ public class LoadLevelFromJson: MonoBehaviour {
         int piecesCount = _level.piecesInfoList.Count;
 
         // Display numbers
+        List<GameObject> pieces = new List<GameObject>();
         for (int i = 0; i < piecesCount; i++)
         {
             Vector2 piecePos = _level.piecesInfoList[i].position;
@@ -60,12 +61,50 @@ public class LoadLevelFromJson: MonoBehaviour {
             piece.tag = "Number";
 
             board.AddOnBoard(piece, piecePos);
+            pieces.Add(piece);
         }
-        // Display finish
+
+        // Display finish and add to board before border calculation
         GameObject finish = _piecesManager.DisplayFinish(_level.finishInfo.pos);
         finish.tag = "Finish";
-        //the finish
         board.AddOnBoard(finish, _level.finishInfo.pos);
+
+        // Set borders after all pieces (including finish) are placed
+        for (int i = 0; i < piecesCount; i++)
+        {
+            Vector2 piecePos = _level.piecesInfoList[i].position;
+            GameObject piece = pieces[i];
+
+            // Check for borders (now includes finish piece as neighbor)
+            bool hasLeft = board.HasPieceAt(new Vector2(piecePos.x - 1, piecePos.y));
+            bool hasRight = board.HasPieceAt(new Vector2(piecePos.x + 1, piecePos.y));
+            bool hasTop = board.HasPieceAt(new Vector2(piecePos.x, piecePos.y + 1));
+            bool hasBottom = board.HasPieceAt(new Vector2(piecePos.x, piecePos.y - 1));
+
+            // Add or get BorderInfo component
+            BorderInfo borderInfo = piece.GetComponent<BorderInfo>();
+            if (borderInfo == null)
+            {
+                borderInfo = piece.AddComponent<BorderInfo>();
+            }
+
+            borderInfo.SetBorders(!hasLeft, !hasRight, !hasTop, !hasBottom);
+        }
+
+        // Set borders for finish piece
+        Vector2 finishPos = _level.finishInfo.pos;
+        bool finishHasLeft = board.HasPieceAt(new Vector2(finishPos.x - 1, finishPos.y));
+        bool finishHasRight = board.HasPieceAt(new Vector2(finishPos.x + 1, finishPos.y));
+        bool finishHasTop = board.HasPieceAt(new Vector2(finishPos.x, finishPos.y + 1));
+        bool finishHasBottom = board.HasPieceAt(new Vector2(finishPos.x, finishPos.y - 1));
+
+        BorderInfo finishBorderInfo = finish.GetComponent<BorderInfo>();
+        if (finishBorderInfo == null)
+        {
+            finishBorderInfo = finish.AddComponent<BorderInfo>();
+        }
+
+        finishBorderInfo.SetBorders(!finishHasLeft, !finishHasRight, !finishHasTop, !finishHasBottom);
         // Cursor
         cursorPrefab.InitialStart(_level.mousePos);
     }
