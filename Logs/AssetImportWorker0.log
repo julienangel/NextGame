@@ -579,17 +579,3 @@ Received Import Request.
 Start importing Assets/Scripts/GameManager.cs using Guid(f04518ed83fdfae4a898264d1c787508) Importer(2089858483,192608db42251d675da83286b1cce702) (ScriptedImporter) -> (artifact id: 'bc62d603c1699a0222a112392f13e96b') in 0.0162417 seconds
 Number of updated asset objects reloaded before import = 0Number of asset objects unloaded after import = 0
 
-<<<<<<< Updated upstream
-========================================================================
-Received Prepare
-ETC Legacy compression has been deprecated and will be removed in a future release. You can review compressors in "Project Settings > Editor > Texture Compressors".
-Refreshing native plugins compatible for Editor in 15.10 ms, found 2 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 18 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 3770 unused Assets / (2.7 MB). Loaded Objects now: 4248.
-Memory consumption went from 87.1 MB to 84.4 MB.
-Total: 11.461800 ms (FindLiveObjects: 0.596700 ms CreateObjectMapping: 0.443700 ms MarkObjects: 6.948600 ms  DeleteObjects: 3.471300 ms)
-
-Prepare: number of updated asset objects reloaded= 0
-=======
->>>>>>> Stashed changes
