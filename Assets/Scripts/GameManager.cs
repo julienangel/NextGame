@@ -21,7 +21,7 @@ public class GameManager : MonoBehaviour
 
     //Controllers
     private UIButtons uiButtons;
-    private LevelGenerator _levelGenerator;
+    //private LevelGenerator _levelGenerator;
     private LoadLevelFromJson jsonLoader;
     [HideInInspector] public BoardManager board;
     [HideInInspector] public BackGroundManager backgroundManager;
@@ -50,7 +50,7 @@ public class GameManager : MonoBehaviour
         //Screen.SetResolution(720, 1280, false);
         jsonLoader = LoadLevelFromJson.Create();
         uiButtons = UIButtons.Create(this, jsonLoader);
-        _levelGenerator = new LevelGenerator();
+        //_levelGenerator = new LevelGenerator();
         board = new BoardManager();
     }
 

@@ -531,14 +531,3 @@ Memory consumption went from 87.1 MB to 84.5 MB.
 Total: 8.672600 ms (FindLiveObjects: 0.447200 ms CreateObjectMapping: 0.263900 ms MarkObjects: 5.540200 ms  DeleteObjects: 2.418800 ms)
 
 Prepare: number of updated asset objects reloaded= 0
-========================================================================
-Received Prepare
-ETC Legacy compression has been deprecated and will be removed in a future release. You can review compressors in "Project Settings > Editor > Texture Compressors".
-Refreshing native plugins compatible for Editor in 16.56 ms, found 2 plugins.
-Preloading 0 native plugins for Editor in 0.00 ms.
-Unloading 18 Unused Serialized files (Serialized files now loaded: 0)
-Unloading 3770 unused Assets / (3.5 MB). Loaded Objects now: 4248.
-Memory consumption went from 87.1 MB to 83.6 MB.
-Total: 14.736100 ms (FindLiveObjects: 0.515300 ms CreateObjectMapping: 0.327700 ms MarkObjects: 9.459600 ms  DeleteObjects: 4.431600 ms)
-
-Prepare: number of updated asset objects reloaded= 0
