@@ -1,14 +1,10 @@
-# Difficulty Level Limits Configuration
-# Format: Difficulty | Size | minPieces | maxPieces | numMax | maxMoves
 
-# Easy (Tutorial, Primeiros Níveis)
 Easy,4x4,4,6,2,20
 Easy,5x5,5,8,3,30
 Easy,6x6,6,10,3,40
 Easy,7x7,8,12,4,50
 Easy,8x8,10,16,4,60
 
-# Medium (Story Mode Normal)
 Medium,5x5,8,12,3,35
 Medium,6x6,10,16,4,50
 Medium,7x7,12,20,4,65
@@ -16,7 +12,6 @@ Medium,8x8,16,26,5,85
 Medium,9x9,20,32,5,100
 Medium,10x10,24,40,6,130
 
-# Hard (Gameplay Avançado)
 Hard,6x6,14,20,4,60
 Hard,7x7,18,28,5,80
 Hard,8x8,24,36,5,100
@@ -25,7 +20,6 @@ Hard,10x10,36,54,6,150
 Hard,11x11,42,64,7,180
 Hard,12x12,50,76,7,210
 
-# SuperHard (End-game)
 SuperHard,8x8,28,42,6,110
 SuperHard,9x9,36,52,6,135
 SuperHard,10x10,42,62,7,165
@@ -34,7 +28,6 @@ SuperHard,12x12,58,84,8,230
 SuperHard,13x13,68,96,8,270
 SuperHard,14x14,76,110,8,310
 
-# Impossible (Boss Levels)
 Impossible,8x8,32,48,6,120
 Impossible,10x10,48,70,7,180
 Impossible,12x12,66,96,8,250

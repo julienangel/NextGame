@@ -21,8 +21,7 @@ public class GameManager : MonoBehaviour
 
     //Controllers
     private UIButtons uiButtons;
-    //private LevelGenerator _levelGenerator;
-    private LoadLevelFromJson jsonLoader;
+    private LevelDisplayManager levelDisplayManager;
     [HideInInspector] public BoardManager board;
     [HideInInspector] public BackGroundManager backgroundManager;
     [HideInInspector] public PiecesManager piecesManager;
@@ -48,10 +47,10 @@ public class GameManager : MonoBehaviour
         QualitySettings.vSyncCount = 0;
         
         //Screen.SetResolution(720, 1280, false);
-        jsonLoader = LoadLevelFromJson.Create();
-        uiButtons = UIButtons.Create(this, jsonLoader);
-        //_levelGenerator = new LevelGenerator();
-        board = new BoardManager();
+        piecesManager = PiecesManager.Create();
+        levelDisplayManager = LevelDisplayManager.Create();
+        board = BoardManager.Create();
+        uiButtons = UIButtons.Create(this, levelDisplayManager);
     }
 
     void Start()
@@ -94,6 +93,15 @@ public class GameManager : MonoBehaviour
                 uiButtons.PlayUnlockedLevel(levelNumber);
                 LevelUpdated?.Invoke(levelNumber);
             });
+    }
+
+    public void RestartCurrentLevel()
+    {
+        PlayFinishPieceTransition?.Invoke(()=>
+        {
+            uiButtons.ReplayCurrentLevel();
+            LevelUpdated?.Invoke(levelNumber);
+        });
     }
 
     public async void PlayNextUnlockedLevel()

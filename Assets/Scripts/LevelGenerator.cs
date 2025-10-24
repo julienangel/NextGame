@@ -177,14 +177,15 @@ public static class LevelGenerator
     {
         int targetDirectionalPieces = difficulty switch
         {
-            Difficulty.Easy => UnityEngine.Random.Range(0, 2),
-            Difficulty.Medium => UnityEngine.Random.Range(1, 3),
-            Difficulty.Hard => UnityEngine.Random.Range(2, 4),
-            Difficulty.SuperHard => UnityEngine.Random.Range(3, 5),
-            Difficulty.Impossible => UnityEngine.Random.Range(4, 6),
+            // Difficulty.Easy => UnityEngine.Random.Range(0, 2),
+            // Difficulty.Medium => UnityEngine.Random.Range(1, 3),
+            // Difficulty.Hard => UnityEngine.Random.Range(2, 4),
+            // Difficulty.SuperHard => UnityEngine.Random.Range(3, 5),
+            // Difficulty.Impossible => UnityEngine.Random.Range(4, 6),
             _ => 0
         };
-        if (mode == GenerationMode.UltraFast) targetDirectionalPieces = 0;
+        // if (mode == GenerationMode.UltraFast)
+        targetDirectionalPieces = 0;
 
         var board = new NativeArray<sbyte>(size * size, Allocator.Temp);
         for (int i = 0; i < board.Length; i++) board[i] = 0;
@@ -236,8 +237,10 @@ public static class LevelGenerator
                 break;
             }
 
-            bool shouldPlaceDirectional = directionalPiecesPlaced < targetDirectionalPieces && uniqueCells > 1 &&
-                                          revisitCells.Length > 0 && UnityEngine.Random.value < 0.2f;
+            // bool shouldPlaceDirectional = directionalPiecesPlaced < targetDirectionalPieces && uniqueCells > 1 &&
+            //                               revisitCells.Length > 0 && UnityEngine.Random.value < 0.2f;
+
+            bool shouldPlaceDirectional = false;
             int2 chosen;
             bool pickNew = UnityEngine.Random.value < preferNewProb;
             if (uniqueCells < minPieces && newCells.Length > 0)
@@ -417,14 +420,14 @@ public static class LevelGenerator
         // CORREÇÃO: O switch que estava em falta foi preenchido.
         int targetDirectionalPieces = difficulty switch
         {
-            Difficulty.Easy => UnityEngine.Random.Range(0, 2),
-            Difficulty.Medium => UnityEngine.Random.Range(1, 3),
-            Difficulty.Hard => UnityEngine.Random.Range(2, 4),
-            Difficulty.SuperHard => UnityEngine.Random.Range(3, 5),
-            Difficulty.Impossible => UnityEngine.Random.Range(4, 6),
+            // Difficulty.Easy => UnityEngine.Random.Range(0, 2),
+            // Difficulty.Medium => UnityEngine.Random.Range(1, 3),
+            // Difficulty.Hard => UnityEngine.Random.Range(2, 4),
+            // Difficulty.SuperHard => UnityEngine.Random.Range(3, 5),
+            // Difficulty.Impossible => UnityEngine.Random.Range(4, 6),
             _ => 0
         };
-        if (mode == GenerationMode.UltraFast) targetDirectionalPieces = 0;
+        /*if (mode == GenerationMode.UltraFast) */targetDirectionalPieces = 0;
 
         int directionalPiecesPlaced = 0;
         var tempDirectionalPieces = new NativeList<DirectionalPieceInfo>(targetDirectionalPieces, Allocator.Temp);

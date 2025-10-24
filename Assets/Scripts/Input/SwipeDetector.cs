@@ -97,7 +97,6 @@ public class SwipeDetector : MonoBehaviour
                         var swipe = new Swipe(direction.Value, _swipeStartPosition.Value, endPosition);
                         _swipeQueue.Enqueue(swipe);
                         _lastSwipeTime = Time.time;
-                        Debug.Log($"Detected swipe: {direction.Value}");
 
                         // Spawn particles at the end of the swipe
                         //SpawnSwipeParticles(swipe);

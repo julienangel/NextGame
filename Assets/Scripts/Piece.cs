@@ -2,13 +2,15 @@
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
+using DG.Tweening;
+using UnityEngine.Serialization;
 
 public class Piece : MonoBehaviour {
     
     public TextMeshProUGUI numberText;
     [SerializeField] private SpriteRenderer _scribbleOverlay;
     
-    public SpriteRenderer sprite;
+    [FormerlySerializedAs("sprite")] public SpriteRenderer _spriteRenderer;
     
     public int number;
 
@@ -32,7 +34,7 @@ public class Piece : MonoBehaviour {
                 this.gameObject.tag = "Untagged";
                 numberText.text = "";
                 //_scribbleOverlay.enabled = true;
-                sprite.enabled = false;
+                _spriteRenderer.DOFade(0.0f, 0.2f);
                 board.DecrementNumberCount();
             }
         }
@@ -41,7 +43,8 @@ public class Piece : MonoBehaviour {
     public void Initialize()
     {
         numberText.text = "" + number;
-        sprite.enabled = true;
+        //_spriteRenderer.enabled = true;
+        _spriteRenderer.DOFade(1, 0f);
         //_scribbleOverlay.enabled = false;
     }
 }

@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using UnityEngine;
 using Unity.Mathematics;
@@ -146,5 +147,30 @@ public class LevelDisplayManager : MonoBehaviour
         }
 
         borderInfo.SetBorders(!hasLeft, !hasRight, !hasTop, !hasBottom);
+    }
+
+    private void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.S))
+        {
+            if (_hasLevelCached)
+            {
+                var solution = LevelSolver.SolveComplete(_cachedLevel, _cachedLevel.MousePos, 200f, 500000, 8192);
+                if (solution.IsCreated)
+                {
+                    string solutionLog = $"Solution found with {solution.Length} moves:\n";
+                    for (int i = 0; i < solution.Length; i++)
+                    {
+                        solutionLog += $"Move {i + 1}: {solution[i]}\n";
+                    }
+                    Debug.Log(solutionLog);
+                    solution.Dispose();
+                }
+                else
+                {
+                    Debug.LogWarning("No solution found!");
+                }
+            }
+        }
     }
 }
