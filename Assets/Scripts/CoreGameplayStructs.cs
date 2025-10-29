@@ -1,5 +1,5 @@
-using Unity.Collections;
-using Unity.Mathematics;
+using System;
+using System.Runtime.CompilerServices;
 
 #region Enums
 
@@ -11,17 +11,6 @@ public enum MoveDirection : byte
     Left = 3,
     Right = 4,
     Finish = 5
-}
-
-[System.Flags]
-public enum Direction : byte
-{
-    None = 0,
-    Up = 1 << 0,    // 1
-    Down = 1 << 1,  // 2
-    Left = 1 << 2,  // 4
-    Right = 1 << 3, // 8
-    All = Up | Down | Left | Right // 15
 }
 
 public enum Difficulty : byte
@@ -46,32 +35,80 @@ public enum GenerationMode : byte
 
 #region Structs de Dados
 
+public enum Direction : byte
+{
+    Up = 0,
+    Down = 1,
+    Left = 2,
+    Right = 3
+}
+
+public struct Position : IEquatable<Position>
+{
+    public readonly int X;
+    public readonly int Y;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public Position(int x, int y)
+    {
+        X = x;
+        Y = y;
+    }
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public bool Equals(Position other) => X == other.X && Y == other.Y;
+    
+    public override bool Equals(object obj) => obj is Position pos && Equals(pos);
+    
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override int GetHashCode() => (X << 16) | (Y & 0xFFFF);
+}
+
 public struct PieceInfo
 {
-    public int2 Position;
-    public sbyte Value;
+    public Position Position;
+    public int Value;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public PieceInfo(Position position, int value)
+    {
+        Position = position;
+        Value = value;
+    }
 }
 
 public struct DirectionalPieceInfo
 {
-    public int2 Position;
-    public sbyte Value;
+    public Position Position;
+    public int Value;
     public Direction AllowedIn;
     public Direction AllowedOut;
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public DirectionalPieceInfo(Position position, int value, Direction allowedIn, Direction allowedOut)
+    {
+        Position = position;
+        Value = value;
+        AllowedIn = allowedIn;
+        AllowedOut = allowedOut;
+    }
 }
 
-public struct Level : System.IDisposable
+public struct Level
 {
-    public int2 MousePos;
-    public int2 BoardSize;
-    public int2 FinishPos;
-    public NativeList<PieceInfo> PiecesInfo;
-    public NativeList<DirectionalPieceInfo> DirectionalPiecesInfo;
+    public Position MousePos;
+    public int BoardSize;
+    public Position FinishPos;
+    public PieceInfo[] PiecesInfo;
+    public DirectionalPieceInfo[] DirectionalPiecesInfo;
 
-    public void Dispose()
+    public Level(int boardSize, int maxPieces = 50)
     {
-        if (PiecesInfo.IsCreated) PiecesInfo.Dispose();
-        if (DirectionalPiecesInfo.IsCreated) DirectionalPiecesInfo.Dispose();
+        MousePos = default;
+        BoardSize = boardSize;
+        FinishPos = default;
+        PiecesInfo = new PieceInfo[maxPieces];
+        DirectionalPiecesInfo = Array.Empty<DirectionalPieceInfo>(); // Por enquanto vazio
     }
 }
 

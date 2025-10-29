@@ -14,8 +14,10 @@ public class LevelDisplayManager : MonoBehaviour
 
     public static LevelDisplayManager Create()
     {
-        GameObject gameObject = new GameObject();
-        gameObject.name = "LevelDisplayManager";
+        GameObject gameObject = new GameObject
+        {
+            name = "LevelDisplayManager"
+        };
         LevelDisplayManager displayManager = gameObject.AddComponent<LevelDisplayManager>();
         displayManager._cameraCalculation = new CameraCalculation();
         displayManager._cursorPrefab = Resources.Load<Cursor>("Prefabs/Cursor");
@@ -29,6 +31,11 @@ public class LevelDisplayManager : MonoBehaviour
     {
         _board = GameManager.GetInstance().board;
         _piecesManager = GameManager.GetInstance().piecesManager;
+    }
+
+    void OnDestroy()
+    {
+        _hasLevelCached = false;
     }
 
     public void DisplayLevel(Level level)
@@ -54,7 +61,7 @@ public class LevelDisplayManager : MonoBehaviour
 
     private void DisplayLevelInternal(Level level)
     {
-        int size = level.BoardSize.x;
+        int size = level.BoardSize;
         _piecesManager.DesativatePieces();
         _board.ResetNumberCount();
         _board.NewBoard(size);
@@ -65,7 +72,7 @@ public class LevelDisplayManager : MonoBehaviour
         for (int i = 0; i < level.PiecesInfo.Length; i++)
         {
             PieceInfo pieceInfo = level.PiecesInfo[i];
-            Vector2 piecePos = new Vector2(pieceInfo.Position.x, pieceInfo.Position.y);
+            Vector2 piecePos = new Vector2(pieceInfo.Position.X, pieceInfo.Position.Y);
             int number = pieceInfo.Value;
 
             GameObject piece = _piecesManager.DisplayPiece(i, piecePos, number);
@@ -76,17 +83,17 @@ public class LevelDisplayManager : MonoBehaviour
         }
 
         // Display directional pieces
-        int directionalStartIndex = level.PiecesInfo.Length;
+        int directionalStartIndex = level.DirectionalPiecesInfo.Length;
         for (int i = 0; i < level.DirectionalPiecesInfo.Length; i++)
         {
             DirectionalPieceInfo dirPieceInfo = level.DirectionalPiecesInfo[i];
-            Vector2 piecePos = new Vector2(dirPieceInfo.Position.x, dirPieceInfo.Position.y);
+            Vector2 piecePos = new Vector2(dirPieceInfo.Position.X, dirPieceInfo.Position.Y);
             int number = dirPieceInfo.Value;
 
             GameObject piece = _piecesManager.DisplayPiece(directionalStartIndex + i, piecePos, number);
             piece.tag = "Number";
 
-            // Add directional component if needed
+            // Add a directional component if needed
             DirectionalPiece dirComponent = piece.GetComponent<DirectionalPiece>();
             if (dirComponent == null)
             {
@@ -100,16 +107,16 @@ public class LevelDisplayManager : MonoBehaviour
         }
 
         // Display finish piece
-        Vector2 finishPos = new Vector2(level.FinishPos.x, level.FinishPos.y);
+        Vector2 finishPos = new Vector2(level.FinishPos.X, level.FinishPos.Y);
         GameObject finish = _piecesManager.DisplayFinish(finishPos);
         finish.tag = "Finish";
         _board.AddOnBoard(finish, finishPos);
 
         // Set borders for regular pieces
-        for (int i = 0; i < level.PiecesInfo.Length; i++)
+        for (int i = 0; i < level.DirectionalPiecesInfo.Length; i++)
         {
-            PieceInfo pieceInfo = level.PiecesInfo[i];
-            Vector2 piecePos = new Vector2(pieceInfo.Position.x, pieceInfo.Position.y);
+            DirectionalPieceInfo pieceInfo = level.DirectionalPiecesInfo[i];
+            Vector2 piecePos = new Vector2(pieceInfo.Position.X, pieceInfo.Position.Y);
             GameObject piece = pieces[i];
 
             SetBorders(piece, piecePos);
@@ -119,8 +126,8 @@ public class LevelDisplayManager : MonoBehaviour
         for (int i = 0; i < level.DirectionalPiecesInfo.Length; i++)
         {
             DirectionalPieceInfo dirPieceInfo = level.DirectionalPiecesInfo[i];
-            Vector2 piecePos = new Vector2(dirPieceInfo.Position.x, dirPieceInfo.Position.y);
-            GameObject piece = pieces[level.PiecesInfo.Length + i];
+            Vector2 piecePos = new Vector2(dirPieceInfo.Position.X, dirPieceInfo.Position.Y);
+            GameObject piece = pieces[level.DirectionalPiecesInfo.Length + i];
 
             SetBorders(piece, piecePos);
         }
@@ -129,7 +136,8 @@ public class LevelDisplayManager : MonoBehaviour
         SetBorders(finish, finishPos);
 
         // Initialize cursor
-        Vector2 mousePos = new Vector2(level.MousePos.x, level.MousePos.y);
+        Vector2 mousePos = new Vector2(level.MousePos.X, level.MousePos.Y);
+        _board.SetCursorPosition(new Vector2Int(level.MousePos.X, level.MousePos.Y));
         _cursorPrefab.InitialStart(mousePos);
     }
 
@@ -155,16 +163,16 @@ public class LevelDisplayManager : MonoBehaviour
         {
             if (_hasLevelCached)
             {
-                var solution = LevelSolver.SolveComplete(_cachedLevel, _cachedLevel.MousePos, 200f, 500000, 8192);
-                if (solution.IsCreated)
+                var solution = LevelSolver.SolveWithException(_board.GetCurrentLevelState());
+                if (solution.Count > 0)
                 {
-                    string solutionLog = $"Solution found with {solution.Length} moves:\n";
-                    for (int i = 0; i < solution.Length; i++)
+                    string solutionLog = $"Solution found with {solution.Count} moves:\n";
+                    for (int i = 0; i < solution.Count; i++)
                     {
                         solutionLog += $"Move {i + 1}: {solution[i]}\n";
                     }
                     Debug.Log(solutionLog);
-                    solution.Dispose();
+                    //solution.Dispose();
                 }
                 else
                 {

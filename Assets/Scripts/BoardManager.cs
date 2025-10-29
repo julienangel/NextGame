@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
@@ -6,17 +7,16 @@ public class BoardManager : MonoBehaviour
 {
     [HideInInspector]
     public GameObject[,] board;
-    
     private int numberOfPieces = -1;
-
-    private Cursor cursor;
-
     private bool finishedLevel = false;
+    private Vector2Int _cursorPosition;
 
     public static BoardManager Create()
     {
-        GameObject gameObject = new GameObject();
-        gameObject.name = "BoardManager";
+        GameObject gameObject = new GameObject
+        {
+            name = "BoardManager"
+        };
         BoardManager board = gameObject.AddComponent<BoardManager>();
         return board;
     }
@@ -31,6 +31,11 @@ public class BoardManager : MonoBehaviour
                 board[i, j] = null;
             }
         }
+    }
+
+    public void SetCursorPosition(Vector2Int pos)
+    {
+        _cursorPosition = pos;
     }
 
     public void AddOnBoard(GameObject number, Vector2 pos)
@@ -70,6 +75,7 @@ public class BoardManager : MonoBehaviour
         {
             atualPiece.UpdateValue();
             finishedLevel = false;
+            _cursorPosition = new Vector2Int(xDir, yDir);
             return true;
         }
 
@@ -77,6 +83,7 @@ public class BoardManager : MonoBehaviour
         {
             atualPiece.UpdateValue();
             finishedLevel = true;
+            _cursorPosition = new Vector2Int(xDir, yDir);
             return true;
         }
             
@@ -103,5 +110,53 @@ public class BoardManager : MonoBehaviour
     public void DecrementNumberCount()
     {
         numberOfPieces--;
+    }
+    
+    public Level GetCurrentLevelState()
+    {
+        int size = board.GetLength(0);
+        Level level = new Level(size, size * size);
+        
+        List<PieceInfo> pieces = new List<PieceInfo>();
+        Position finishPos = new Position(0, 0);
+        
+        // Percorrer todo o board
+        for (int x = 0; x < size; x++)
+        {
+            for (int y = 0; y < size; y++)
+            {
+                GameObject obj = board[x, y];
+                
+                if (obj == null)
+                    continue;
+                
+                // Verificar se é o Finish
+                if (obj.tag == "Finish")
+                {
+                    finishPos = new Position(x, y);
+                    continue;
+                }
+                
+                // Verificar se é uma peça numerada
+                if (obj.tag == "Number")
+                {
+                    Piece piece = obj.GetComponent<Piece>();
+                    if (piece != null)
+                    {
+                        int value = piece.number; // Assumindo que tens este método
+                        pieces.Add(new PieceInfo(new Position(x, y), value));
+                    }
+                }
+            }
+        }
+        
+        // Preencher level
+        level.MousePos = new Position(_cursorPosition.x, _cursorPosition.y);
+        level.FinishPos = finishPos;
+        level.BoardSize = size;
+        level.PiecesInfo = pieces.ToArray();
+        level.DirectionalPiecesInfo = Array.Empty<DirectionalPieceInfo>(); // Vazio por enquanto
+        
+        return level;
     }
 }

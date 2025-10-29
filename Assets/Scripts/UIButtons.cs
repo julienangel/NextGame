@@ -31,8 +31,10 @@ public class UIButtons : MonoBehaviour
 
     public static UIButtons Create(GameManager gameManager, LevelDisplayManager levelDisplayManager)
     {
-        GameObject gameObject = new GameObject();
-        gameObject.name = "UiButtons";
+        GameObject gameObject = new GameObject
+        {
+            name = "UiButtons"
+        };
         UIButtons uiButtons = gameObject.AddComponent<UIButtons>();
         uiButtons._gameManager = gameManager;
         uiButtons._levelDisplayManager = levelDisplayManager;
@@ -121,6 +123,7 @@ public class UIButtons : MonoBehaviour
 
     public void PlayUnlockedLevel(int numberLevel)
     {
+        numberLevel = 25;
         _sceneState.gameState = SceneState.GameState.InGame;
         //_gameManager.fadeScenes.PlayFade();
         NavigationBetweenScenes();
@@ -150,11 +153,19 @@ public class UIButtons : MonoBehaviour
         // Validate parameters against difficulty limits (see difficulty_limits.txt)
         ValidateLevelParameters(ref size, ref minPieces, ref maxPieces, ref numMax, ref maxMoves, difficulty);
 
-        Level level = LevelGenerator.GenerateLevel(minPieces, maxPieces, numMax, maxMoves, size, difficulty);
+        Level level = LevelGenerator.GenerateLevel(
+            minPieces,
+            maxPieces,
+            numMax,
+            maxMoves,
+            size,
+            useDirectionalPieces: false,
+            avoidBacktracking: true
+        );
 
         ShowLevelAsDebugLog(level);
 
-        if (level.PiecesInfo.IsCreated || level.DirectionalPiecesInfo.IsCreated)
+        if (level.PiecesInfo.Length > 0)
         {
             _levelDisplayManager.DisplayLevel(level);
         }
@@ -164,7 +175,8 @@ public class UIButtons : MonoBehaviour
         }
     }
 
-    private void ValidateLevelParameters(ref int size, ref int minPieces, ref int maxPieces, ref int numMax, ref int maxMoves, Difficulty difficulty)
+    private void ValidateLevelParameters(ref int size, ref int minPieces, ref int maxPieces, ref int numMax,
+        ref int maxMoves, Difficulty difficulty)
     {
         // Use difficulty_limits.txt for upper bounds
         if (_difficultyLimitsLookup == null || _difficultyLimitsLookup.Count == 0)
@@ -184,7 +196,8 @@ public class UIButtons : MonoBehaviour
             numMax = limits.NumMax;
             maxMoves = limits.MaxMoves;
 
-            Debug.Log($"Applied limits for {key}: minPieces={minPieces}, maxPieces={maxPieces}, numMax={numMax}, maxMoves={maxMoves}");
+            Debug.Log(
+                $"Applied limits for {key}: minPieces={minPieces}, maxPieces={maxPieces}, numMax={numMax}, maxMoves={maxMoves}");
         }
         else
         {
@@ -198,32 +211,34 @@ public class UIButtons : MonoBehaviour
         }
     }
 
-    private void ShowLevelAsDebugLog(Level level)
+    private void ShowLevelAsDebugLog(in Level level)
     {
-        int size = level.BoardSize.x;
-        string[,] board = new string[size, size];
+        int size = level.BoardSize;
+        string[][] board = new string[size][];
+        for (int index = 0; index < size; index++)
+        {
+            board[index] = new string[size];
+        }
 
         // Initialize empty board
         for (int y = 0; y < size; y++)
-            for (int x = 0; x < size; x++)
-                board[x, y] = ".";
+        for (int x = 0; x < size; x++)
+            board[x][y] = ".";
 
         // Place regular pieces
-        for (int i = 0; i < level.PiecesInfo.Length; i++)
+        foreach (var piece in level.PiecesInfo)
         {
-            var piece = level.PiecesInfo[i];
-            board[piece.Position.x, piece.Position.y] = piece.Value.ToString();
+            board[piece.Position.X][piece.Position.Y] = piece.Value.ToString();
         }
 
         // Place directional pieces
-        for (int i = 0; i < level.DirectionalPiecesInfo.Length; i++)
+        foreach (var piece in level.DirectionalPiecesInfo)
         {
-            var piece = level.DirectionalPiecesInfo[i];
-            board[piece.Position.x, piece.Position.y] = piece.Value.ToString() + "d";
+            board[piece.Position.X][piece.Position.Y] = piece.Value + "d";
         }
 
         // Place finish
-        board[level.FinishPos.x, level.FinishPos.y] = "F";
+        board[level.FinishPos.X][level.FinishPos.Y] = "F";
 
         // Build string representation
         string boardStr = "Board Layout:\n";
@@ -231,8 +246,9 @@ public class UIButtons : MonoBehaviour
         {
             for (int x = 0; x < size; x++)
             {
-                boardStr += board[x, y].PadLeft(3);
+                boardStr += board[x][y].PadLeft(3);
             }
+
             boardStr += "\n";
         }
 
@@ -251,73 +267,73 @@ public class UIButtons : MonoBehaviour
         switch (_sceneState.gameState)
         {
             case SceneState.GameState.Menu:
-                {
-                    MenuHolderObjects.SetActive(true);
-                    LevelPacksHolder.SetActive(false);
-                    LevelsHolder.SetActive(false);
-                    InGame.SetActive(false);
-                    StoreHolder.SetActive(false);
-                    OptionsHolder.SetActive(false);
-                    //Desativar peças
-                    //_gameManager.backgroundManager.DesativatePieces();
-                    _gameManager.piecesManager.DesativatePieces();
-                    _gameManager.cursorObject.SetActive(false);
-                    break;
-                }
+            {
+                MenuHolderObjects.SetActive(true);
+                LevelPacksHolder.SetActive(false);
+                LevelsHolder.SetActive(false);
+                InGame.SetActive(false);
+                StoreHolder.SetActive(false);
+                OptionsHolder.SetActive(false);
+                //Desativar peças
+                //_gameManager.backgroundManager.DesativatePieces();
+                _gameManager.piecesManager.DesativatePieces();
+                _gameManager.cursorObject.SetActive(false);
+                break;
+            }
             case SceneState.GameState.PackHolder:
-                {
-                    MenuHolderObjects.SetActive(false);
-                    LevelPacksHolder.SetActive(true);
-                    LevelsHolder.SetActive(false);
-                    InGame.SetActive(false);
-                    StoreHolder.SetActive(false);
-                    OptionsHolder.SetActive(false);
-                    break;
-                }
+            {
+                MenuHolderObjects.SetActive(false);
+                LevelPacksHolder.SetActive(true);
+                LevelsHolder.SetActive(false);
+                InGame.SetActive(false);
+                StoreHolder.SetActive(false);
+                OptionsHolder.SetActive(false);
+                break;
+            }
             case SceneState.GameState.LevelPack:
-                {
-                    MenuHolderObjects.SetActive(false);
-                    LevelPacksHolder.SetActive(false);
-                    LevelsHolder.SetActive(true);
-                    InGame.SetActive(false);
-                    StoreHolder.SetActive(false);
-                    OptionsHolder.SetActive(false);
-                    break;
-                }
+            {
+                MenuHolderObjects.SetActive(false);
+                LevelPacksHolder.SetActive(false);
+                LevelsHolder.SetActive(true);
+                InGame.SetActive(false);
+                StoreHolder.SetActive(false);
+                OptionsHolder.SetActive(false);
+                break;
+            }
             case SceneState.GameState.Store:
-                {
-                    MenuHolderObjects.SetActive(false);
-                    LevelPacksHolder.SetActive(false);
-                    LevelsHolder.SetActive(false);
-                    InGame.SetActive(false);
-                    StoreHolder.SetActive(true);
-                    OptionsHolder.SetActive(false);
-                    break;
-                }
+            {
+                MenuHolderObjects.SetActive(false);
+                LevelPacksHolder.SetActive(false);
+                LevelsHolder.SetActive(false);
+                InGame.SetActive(false);
+                StoreHolder.SetActive(true);
+                OptionsHolder.SetActive(false);
+                break;
+            }
             case SceneState.GameState.Options:
-                {
-                    MenuHolderObjects.SetActive(false);
-                    LevelPacksHolder.SetActive(false);
-                    LevelsHolder.SetActive(false);
-                    InGame.SetActive(false);
-                    StoreHolder.SetActive(false);
-                    OptionsHolder.SetActive(true);
-                    break;
-                }
+            {
+                MenuHolderObjects.SetActive(false);
+                LevelPacksHolder.SetActive(false);
+                LevelsHolder.SetActive(false);
+                InGame.SetActive(false);
+                StoreHolder.SetActive(false);
+                OptionsHolder.SetActive(true);
+                break;
+            }
             case SceneState.GameState.InGame:
-                {
-                    MenuHolderObjects.SetActive(false);
-                    LevelPacksHolder.SetActive(false);
-                    LevelsHolder.SetActive(false);
-                    InGame.SetActive(true);
-                    StoreHolder.SetActive(false);
-                    OptionsHolder.SetActive(true);
-                    break;
-                }
+            {
+                MenuHolderObjects.SetActive(false);
+                LevelPacksHolder.SetActive(false);
+                LevelsHolder.SetActive(false);
+                InGame.SetActive(true);
+                StoreHolder.SetActive(false);
+                OptionsHolder.SetActive(true);
+                break;
+            }
             default:
-                {
-                    break;
-                }
+            {
+                break;
+            }
         }
     }
 }
